@@ -45,8 +45,8 @@ Rickshaw.Graph.HoverDetail = Rickshaw.Class.create({
 		var eventX = e.offsetX || e.layerX;
 		var eventY = e.offsetY || e.layerY;
 
-		var domainX = graph.x.invert(eventX);
-		var stackedData = graph.stackedData;
+		var domainX = this.graph.x.invert(eventX);
+		var stackedData = this.graph.stackedData;
 
 		var topSeriesData = stackedData.slice(-1).shift();
 
@@ -68,10 +68,10 @@ Rickshaw.Graph.HoverDetail = Rickshaw.Class.create({
 
 		var domainX = stackedData[0][dataIndex].x;
 		var formattedXValue = this.xFormatter(domainX);
-		var graphX = graph.x(domainX);
+		var graphX = this.graph.x(domainX);
 		var order = 0;
 
-		var detail = graph.series.active()
+		var detail = this.graph.series.active()
 			.map( function(s) { return { order: order++, series: s, name: s.name, value: s.stack[dataIndex] } } );
 
 		var activeItem;
@@ -80,7 +80,7 @@ Rickshaw.Graph.HoverDetail = Rickshaw.Class.create({
 			return (a.value.y0 + a.value.y) - (b.value.y0 + b.value.y);
 		};
 
-		var domainMouseY = graph.y.magnitude.invert(graph.element.offsetHeight - eventY);
+		var domainMouseY = this.graph.y.magnitude.invert(this.graph.element.offsetHeight - eventY);
 
 		detail.sort(sortFn).forEach( function(d) {
 
@@ -89,7 +89,7 @@ Rickshaw.Graph.HoverDetail = Rickshaw.Class.create({
 				this.yFormatter(d.value.y);
 
 			d.graphX = graphX;
-			d.graphY = graph.y(d.value.y0 + d.value.y);
+			d.graphY = this.graph.y(d.value.y0 + d.value.y);
 			
 			if (domainMouseY > d.value.y0 && domainMouseY < d.value.y0 + d.value.y && !activeItem) {
 				activeItem = d;
@@ -99,7 +99,7 @@ Rickshaw.Graph.HoverDetail = Rickshaw.Class.create({
 		}, this );
 
 		this.element.innerHTML = '';
-		this.element.style.left = graph.x(domainX) + 'px';
+		this.element.style.left = this.graph.x(domainX) + 'px';
 
 		if (this.visible) {
 			this.render( { 
@@ -150,7 +150,7 @@ Rickshaw.Graph.HoverDetail = Rickshaw.Class.create({
 			var item = document.createElement('div');
 			item.className = 'item';
 			item.innerHTML = this.formatter(d.series, domainX, d.value.y, formattedXValue, d.formattedYValue);
-			item.style.top = graph.y(d.value.y0 + d.value.y) + 'px';
+			item.style.top = this.graph.y(d.value.y0 + d.value.y) + 'px';
 
 			this.element.appendChild(item);
 
